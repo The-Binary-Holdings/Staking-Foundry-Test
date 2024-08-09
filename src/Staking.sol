@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.25;
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 error TransferFailed();
 error NeedsMoreThanZero();

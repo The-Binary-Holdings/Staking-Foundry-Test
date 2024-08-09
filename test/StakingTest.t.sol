@@ -33,7 +33,7 @@ contract StakingTest is Test {
     }
 
     function testStakeMoreThanZero() public {
-        vm.expectRevert(Staking.NeedsMoreThanZero.selector);
+        vm.expectRevert(NeedsMoreThanZero.selector);
 
         vm.prank(user1);
         staking.stake{value: 0}();
@@ -59,7 +59,7 @@ contract StakingTest is Test {
         vm.prank(user1);
         staking.stake{value: 1 ether}();
 
-        vm.expectRevert(Staking.NeedsMoreThanZero.selector);
+        vm.expectRevert(NeedsMoreThanZero.selector);
 
         vm.prank(user1);
         staking.withdraw(2 ether);
@@ -100,15 +100,20 @@ contract StakingTest is Test {
 
         vm.prank(user1);
         staking.stake{value: 1 ether}();
+        console.log("After staking, user1 balance:", address(user1).balance);
+        console.log("After staking, staking contract balance:", address(staking).balance);
 
-        // Set user1's balance to 0 to simulate transfer failure
         vm.prank(address(staking));
         (bool sent, ) = user1.call{value: 1 ether}("");
         require(sent, "Failed to send Ether");
+        console.log("After sending Ether directly to user1, user1 balance:", address(user1).balance);
+        console.log("After sending Ether directly to user1, staking contract balance:", address(staking).balance);
 
-        vm.expectRevert(Staking.TransferFailed.selector);
+        vm.expectRevert(TransferFailed.selector);
 
         vm.prank(user1);
         staking.withdraw(1 ether);
+        console.log("After attempting to withdraw, user1 balance:", address(user1).balance);
+        console.log("After attempting to withdraw, staking contract balance:", address(staking).balance);
     }
 }
